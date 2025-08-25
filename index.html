@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For Karla ❤</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+  <meta name="color-scheme" content="light">
+  <style>
+    :root{
+      --rose: #ff3b81;
+      --rose-dark: #d81b60;
+      --pink: #ff6ea9;
+      --soft-bg1: #fff0f6;
+      --soft-bg2: #f7f0ff;
+    }
+    /* Reset */
+    *{box-sizing:border-box;}
+    html,body{height:100%; margin:0; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+    body{
+      font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(800px 550px at 50% 10%, rgba(255,255,255,0.26), transparent 28%),
+        linear-gradient(135deg, #ffd6e8 0%, #fce7f3 30%, #e8f0ff 100%);
+      background-size: 400% 400%;
+      animation: bgShift 14s ease-in-out infinite;
+      display:flex; align-items:center; justify-content:center; overflow:hidden;
+    }
+    @keyframes bgShift{
+      0%{ background-position:0% 50% }
+      50%{ background-position:100% 50% }
+      100%{ background-position:0% 50% }
+    }
+
+    /* Stage / center area */
+    .stage {
+      width: min(520px, 94vw);
+      max-width:520px;
+      aspect-ratio: 1/1;
+      position:relative;
+      display:grid;
+      place-items:center;
+      border-radius:28px;
+      padding:18px;
+      box-shadow: 0 18px 60px rgba(15,10,30,0.18);
+      background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.12));
+      backdrop-filter: blur(4px) saturate(120%);
+      overflow:visible;
+    }
+
+    /* soft spotlight aura behind teddy */
+    .aura {
+      position:absolute; width:86%; height:86%; border-radius:50%;
+      left:7%; top:7%;
+      background: radial-gradient(circle at 50% 40%, rgba(255,250,250,0.95), rgba(255,230,240,0.6) 25%, rgba(255,210,235,0.20) 50%, transparent 70%);
+      filter: blur(12px) saturate(120%);
+      z-index:0;
+      box-shadow: 0 40px 120px rgba(255,110,169,0.18), inset 0 -10px 40px rgba(255,200,230,0.08);
+      animation: auraPulse 4.2s ease-in-out infinite;
+    }
+    @keyframes auraPulse{ 0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)} }
+
+    /* twinkly sparkles */
+    .sparkles { position:absolute; z-index:0; inset:0; pointer-events:none; overflow:hidden; }
+    .sparkles .dot {
+      position:absolute; width:6px;height:6px;border-radius:50%; background:linear-gradient(180deg,#fff,#ffd6ea);
+      opacity:0.9; filter: drop-shadow(0 6px 14px rgba(255,150,200,0.18));
+      transform: translate3d(0,0,0);
+      animation: sparkleMove linear infinite;
+    }
+    @keyframes sparkleMove{
+      0%{ transform: translateY(0) scale(1); opacity:0.9 }
+      100%{ transform: translateY(-28vh) scale(0.8); opacity:0 }
+    }
+
+    /* container with the bear & rose */
+    .content { position:relative; z-index:2; text-align:center; display:flex; align-items:center; flex-direction:column; gap:8px; }
+
+    /* Teddy area */
+    .teddy-wrap { position:relative; display:inline-block; cursor:pointer; touch-action:manipulation; }
+    /* breathing animation (gentle scale) */
+    .teddy-svg { width: clamp(140px, 34vw, 260px); height:auto; transform-origin:center bottom; animation: breathe 3.8s ease-in-out infinite; will-change:transform; }
+    @keyframes breathe{ 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
+
+    /* slight bobbing for life */
+    .teddy-bob { animation: bob 2.6s ease-in-out infinite; transform-origin:center; }
+    @keyframes bob{ 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)} }
+
+    /* blush (hidden by default) */
+    .blush { opacity:0; transition:opacity .25s ease; }
+
+    /* wink: we'll hide one eye path and show a 'closed eye' line */
+    .eye-open { transition:opacity .18s ease; }
+    .eye-closed { opacity:0; transition:opacity .18s ease; }
+
+    /* rose (SVG) - placed absolutely to appear in paw */
+    .rose-svg { position:absolute; width: clamp(58px, 16vw, 110px); right: 6%; bottom: 18%; transform-origin: bottom center; z-index:3; animation: roseSway 6.8s ease-in-out infinite; }
+    @keyframes roseSway{ 0%{ transform: rotate(-6deg) } 50%{ transform: rotate(6deg) } 100%{ transform: rotate(-6deg) } }
+
+    /* pop message popup */
+    .popup {
+      position:fixed; inset:0; display:flex; justify-content:center; align-items:center;
+      background: rgba(0,0,0,0.45); visibility:hidden; opacity:0; transition:opacity .25s ease, visibility .25s ease; z-index:60; }
+    .popup.active { visibility:visible; opacity:1; }
+    .msg-card {
+      background: linear-gradient(180deg,#ffffff, #fff7fb);
+      border-radius:18px; padding:24px 28px; box-shadow:0 20px 60px rgba(6,6,10,0.28);
+      text-align:center; max-width:92vw;
+    }
+    .msg-card .text { font-family:'Sacramento', cursive; font-size: clamp(26px, 7vw, 40px); color:var(--rose-dark); text-shadow: 0 6px 18px rgba(255,110,169,0.12); margin-bottom:6px; }
+    .msg-card .sub { font-size:13px; color:#7a6f6f; margin-top:6px; }
+
+    /* floating particle (rose/heart) trail style for popup */
+    .floating { position: absolute; pointer-events:none; will-change: transform, opacity; filter: drop-shadow(0 6px 16px rgba(255,110,169,0.28)); }
+
+    /* music toggle button */
+    .sound-btn {
+      position: fixed; right: 12px; bottom: 12px; z-index:80;
+      background:#ffffff; border-radius:999px; border:none; padding:10px 12px; box-shadow:0 8px 28px rgba(10,10,20,0.18); cursor:pointer;
+      font-size:18px;
+    }
+
+    /* label under teddy */
+    .hint { font-size:14px; color:#fff; text-shadow: 0 6px 20px rgba(0,0,0,0.25); font-weight:700; }
+
+    /* small responsive adjustments */
+    @media (max-width:420px){
+      .stage { border-radius:16px; padding:12px; }
+      .rose-svg { right: 8%; bottom: 22%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" role="main" aria-label="Surprise for Karla">
+    <div class="aura" aria-hidden="true"></div>
+    <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+
+    <div class="content" id="content">
+      <div class="teddy-wrap" id="teddy" title="Tap the teddy">
+        <!-- Realistic-but-soft teddy SVG (constructed from shapes) -->
+        <svg class="teddy-svg teddy-bob" viewBox="0 0 360 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- body shadow -->
+          <ellipse cx="180" cy="336" rx="110" ry="36" fill="rgba(0,0,0,0.08)"/>
+          <!-- body -->
+          <g transform="translate(0,0)">
+            <ellipse cx="180" cy="280" rx="110" ry="92" fill="#d2a07a" />
+            <!-- belly -->
+            <ellipse cx="180" cy="295" rx="68" ry="58" fill="#f3dcc6" />
+            <!-- left arm -->
+            <path d="M95 230 C60 230, 46 280, 88 300 C100 307, 120 295, 118 280 C112 252,102 236,95 230 Z" fill="#d2a07a"/>
+            <!-- right arm (behind rose) -->
+            <path d="M265 228 C300 230, 320 272, 290 300 C278 308,254 298,252 284 C248 256,258 238,265 228 Z" fill="#d2a07a"/>
+            <!-- left leg -->
+            <ellipse cx="140" cy="362" rx="36" ry="24" fill="#d2a07a"/>
+            <!-- right leg -->
+            <ellipse cx="220" cy="362" rx="36" ry="24" fill="#d2a07a"/>
+          </g>
+
+          <!-- head -->
+          <g transform="translate(0,0)">
+            <ellipse cx="180" cy="150" rx="120" ry="112" fill="#d2a07a" />
+            <!-- snout -->
+            <ellipse cx="180" cy="172" rx="56" ry="44" fill="#f3dcc6"/>
+            <!-- nose -->
+            <ellipse cx="180" cy="172" rx="14" ry="10" fill="#2f1a12"/>
+            <!-- mouth -->
+            <path d="M170 182 C176 188,184 188,190 182" stroke="#2f1a12" stroke-width="3" stroke-linecap="round" fill="none" />
+          </g>
+
+          <!-- ears -->
+          <g>
+            <ellipse cx="100" cy="96" rx="36" ry="36" fill="#d2a07a"/>
+            <ellipse cx="100" cy="96" rx="18" ry="20" fill="#f3dcc6"/>
+            <ellipse cx="260" cy="96" rx="36" ry="36" fill="#d2a07a"/>
+            <ellipse cx="260" cy="96" rx="18" ry="20" fill="#f3dcc6"/>
+          </g>
+
+          <!-- eyes group (so we can toggle for wink) -->
+          <g id="eyes">
+            <!-- left eye (open) -->
+            <g id="leftEyeOpen" class="eye-open">
+              <ellipse cx="150" cy="150" rx="10" ry="12" fill="#1c1311"/>
+              <circle cx="146" cy="146" r="3.2" fill="#fff" opacity="0.9"/>
+            </g>
+            <!-- left eye (closed) -->
+            <g id="leftEyeClosed" class="eye-closed">
+              <path d="M140 152 C150 158,160 152" stroke="#1c1311" stroke-width="4" stroke-linecap="round" fill="none" />
+            </g>
+
+            <!-- right eye (open) -->
+            <g id="rightEyeOpen" class="eye-open">
+              <ellipse cx="210" cy="150" rx="10" ry="12" fill="#1c1311"/>
+              <circle cx="206" cy="146" r="3.2" fill="#fff" opacity="0.9"/>
+            </g>
+            <!-- right eye (closed) -->
+            <g id="rightEyeClosed" class="eye-closed">
+              <path d="M200 152 C210 158,220 152" stroke="#1c1311" stroke-width="4" stroke-linecap="round" fill="none" />
+            </g>
+          </g>
+
+          <!-- cheeks (blush) -->
+          <g id="blushes" class="blush">
+            <ellipse cx="136" cy="170" rx="18" ry="10" fill="#ffb3c9" opacity="0.85"/>
+            <ellipse cx="224" cy="170" rx="18" ry="10" fill="#ffb3c9" opacity="0.85"/>
+          </g>
+
+          <!-- paw detail near where rose will appear -->
+          <g transform="translate(0,0)">
+            <ellipse cx="255" cy="250" rx="18" ry="12" fill="#f3dcc6"/>
+            <ellipse cx="105" cy="250" rx="18" ry="12" fill="#f3dcc6"/>
+          </g>
+
+          <!-- subtle fur texture (very light) -->
+          <g opacity="0.07">
+            <path d="M60 130 C80 120, 120 140, 140 120" stroke="#000" stroke-width="10" stroke-linecap="round" fill="none"/>
+          </g>
+        </svg>
+
+        <!-- Rose sitting in the paw: separate SVG positioned absolutely -->
+        <svg class="rose-svg" viewBox="0 0 120 180" aria-hidden="true">
+          <!-- stem -->
+          <path d="M60 70 C62 90, 62 110, 62 130" stroke="#2f7d32" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <!-- leaves -->
+          <path d="M62 94 C48 110, 28 106, 40 92 C52 78,60 86,62 94 Z" fill="#2f7d32"/>
+          <path d="M62 114 C80 126, 96 122, 86 108 C76 94,66 104,62 114 Z" fill="#2f7d32"/>
+          <!-- bud group with petals animated -->
+          <g transform="translate(10,6)" class="bud">
+            <!-- back petal -->
+            <path class="petal back" d="M50 48 C62 20, 92 30, 70 62 C64 72,50 68,50 48 Z" fill="var(--rose-dark)" opacity="0.98"/>
+            <!-- left petal -->
+            <path class="petal mid delay1" d="M50 48 C36 26, 16 40, 36 66 C44 76,50 68,50 48 Z" fill="var(--rose)" />
+            <!-- right petal -->
+            <path class="petal front delay2" d="M50 40 C54 20, 76 30, 58 60 C52 70,50 56,50 40 Z" fill="#ff8fb0" />
+            <!-- center -->
+            <circle cx="50" cy="50" r="6" fill="#ffafc8"/>
+          </g>
+        </svg>
+
+      </div>
+
+      <div class="hint">Tap the teddy</div>
+    </div>
+
+    <!-- message popup -->
+    <div id="popup" class="popup" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="msg-card" role="document">
+        <div class="text">I Love You, Karla Gaudier! ❤</div>
+        <div class="sub">Tap anywhere to close</div>
+      </div>
+    </div>
+
+    <button id="soundBtn" class="sound-btn" aria-pressed="false" title="Toggle sound">🔇</button>
+
+  </div>
+
+  <!-- background music (public domain / free track host) -->
+  <audio id="bgm" loop preload="auto" src="https://archive.org/download/love-song-2020-02-17/love-song.mp3
+
+"></audio>
+
+  <script>
+    /*******************************
+     * Utilities and setup
+     *******************************/
+    const teddy = document.getElementById('teddy');
+    const popup = document.getElementById('popup');
+    const bgm = document.getElementById('bgm');
+    const soundBtn = document.getElementById('soundBtn');
+    const eyes = {
+      leftOpen: document.getElementById('leftEyeOpen'),
+      leftClosed: document.getElementById('leftEyeClosed'),
+      rightOpen: document.getElementById('rightEyeOpen'),
+      rightClosed: document.getElementById('rightEyeClosed')
+    };
+    const blushes = document.getElementById('blushes');
+    const sparkles = document.getElementById('sparkles');
+    let musicStarted = false;
+    let soundOn = false;
+
+    // Initialize: ensure eyes open visible, closed hidden
+    function setEyeState(leftOpen=true, rightOpen=true){
+      eyes.leftOpen.style.opacity = leftOpen ? '1' : '0';
+      eyes.leftClosed.style.opacity = leftOpen ? '0' : '1';
+      eyes.rightOpen.style.opacity = rightOpen ? '1' : '0';
+      eyes.rightClosed.style.opacity = rightOpen ? '0' : '1';
+    }
+    setEyeState(true,true);
+
+    /*******************************
+     * Sparkles background (random dots)
+     *******************************/
+    function spawnSparkles(count=10){
+      sparkles.innerHTML = '';
+      const w = sparkles.clientWidth || window.innerWidth;
+      const h = sparkles.clientHeight || window.innerHeight;
+      for(let i=0;i<count;i++){
+        const d = document.createElement('div');
+        d.className = 'dot';
+        const left = Math.random() * 100;
+        const top = 60 + Math.random()*30; // around upper area
+        d.style.left = left + '%';
+        d.style.top = top + '%';
+        d.style.width = (4 + Math.random()*8) + 'px';
+        d.style.height = d.style.width;
+        d.style.opacity = (0.6 + Math.random()*0.5).toString();
+        d.style.animationDuration = (6 + Math.random()*8) + 's';
+        sparkles.appendChild(d);
+      }
+    }
+    spawnSparkles(10);
+    window.addEventListener('resize', ()=> spawnSparkles(10));
+
+    /*******************************
+     * Rose bloom animation (CSS-triggered via keyframes in JS)
+     * We'll add a simple transform animation to petal groups for 'blooming'
+     *******************************/
+    (function addPetalAnimations(){
+      // Create dynamic <style> for petal animations so we can control speeds
+      const style = document.createElement('style');
+      style.id = 'petal-anim';
+      style.textContent = `
+        .petal { transform-origin: 50px 70px; transition: transform 1s ease; }
+        .petal.back { transform: scale(0.7) rotate(-6deg); opacity:0.9; }
+        .petal.mid { transform: scale(0.68) rotate(6deg); opacity:0.9; }
+        .petal.front { transform: scale(0.6) rotate(4deg); opacity:0.9; }
+        /* bloom animation loop */
+        @keyframes petalBloom {
+          0%{ transform: scale(.65) rotate(-8deg); opacity:.85 }
+          45%{ transform: scale(1) rotate(0deg); opacity:1 }
+          55%{ transform: scale(1) rotate(0deg); opacity:1 }
+          100%{ transform: scale(.7) rotate(-6deg); opacity:.9 }
+        }
+        .bud .petal { animation: petalBloom 7s ease-in-out infinite; }
+        .bud .delay1 { animation-delay: .35s; }
+        .bud .delay2 { animation-delay: .7s; }
+      `;
+      document.head.appendChild(style);
+    })();
+
+    /*******************************
+     * Random wink + blush behavior
+     *******************************/
+    function randomBetween(min, max){ return Math.random()*(max-min)+min; }
+
+    function doWinkAndMaybeBlush(){
+      // Choose which eye to wink (left/right)
+      const winkLeft = Math.random() > 0.5;
+      // blink: close that eye for ~160-300ms
+      setEyeState(!winkLeft, winkLeft); // close chosen eye by setting its open to false
+      // optional blush
+      const doBlush = Math.random() < 0.7; // 70% chance to blush near wink
+      if(doBlush){
+        blushes.style.opacity = '1';
+      }
+      setTimeout(()=>{
+        setEyeState(true,true);
+        if(doBlush){
+          // fade blush after 0.6-1.6s
+          setTimeout(()=> blushes.style.opacity = '0', 600 + Math.random()*1000);
+        }
+      }, 160 + Math.random()*260);
+      // schedule next wink randomly between 4-9 seconds
+      scheduleWink();
+    }
+    let winkTimer;
+    function scheduleWink(){
+      clearTimeout(winkTimer);
+      winkTimer = setTimeout(doWinkAndMaybeBlush, randomBetween(4200, 9000));
+    }
+    scheduleWink();
+
+    /*******************************
+     * Popup behavior + endless floating particles
+     *******************************/
+    let particleInterval;
+    function spawnFloatingParticle(type='heart'){
+      // type: 'heart' or 'rose'
+      const el = document.createElement('div');
+      el.className = 'floating';
+      // choose an emoji for charm + we'll add a glowing trail using CSS transform
+      if(type === 'heart'){
+        el.textContent = '❤';
+        el.style.fontSize = (14 + Math.random()*18) + 'px';
+        el.style.left = (30 + Math.random()*40) + '%';
+      } else {
+        el.textContent = '🌹';
+        el.style.fontSize = (16 + Math.random()*20) + 'px';
+        el.style.left = (20 + Math.random()*60) + '%';
+      }
+      // start near bottom of popup area
+      el.style.position = 'absolute';
+      el.style.bottom = '8%';
+      el.style.opacity = '0';
+      el.style.transform = `translateY(0) scale(0.9) rotate(${(Math.random()*30)-15}deg)`;
+      el.style.transition = `transform ${6 + Math.random()*6}s linear, opacity 1s linear`;
+      document.body.appendChild(el);
+
+      // force reflow before animating
+      requestAnimationFrame(()=>{
+        el.style.opacity = '1';
+        const driftX = ((Math.random()*2)-1) * 40; // px
+        el.style.transform = `translateY(-120vh) translateX(${driftX}px) scale(1.05) rotate(${(Math.random()*40)-20}deg)`;
+      });
+
+      // remove after animation
+      setTimeout(()=> el.remove(), (7000 + Math.random()*5000));
+    }
+
+    function startFloatingLoop(){
+      if(particleInterval) return;
+      particleInterval = setInterval(()=>{
+        // spawn a cluster each 700-1100ms
+        spawnFloatingParticle(Math.random()>0.45 ? 'rose' : 'heart');
+      }, 700);
+    }
+    function stopFloatingLoop(){
+      if(particleInterval){ clearInterval(particleInterval); particleInterval = null; }
+    }
+
+    // show popup (tap teddy)
+    function showPopup(){
+      popup.classList.add('active');
+      popup.setAttribute('aria-hidden','false');
+      // start endless floats
+      startFloatingLoop();
+      // start music if not started
+      if(!musicStarted){
+        tryStartMusic();
+      }
+    }
+    function hidePopup(){
+      popup.classList.remove('active');
+      popup.setAttribute('aria-hidden','true');
+      // keep floating going (user requested endless until closed) -> they asked it should continue endlessly while popup shown;
+      // If you want to keep floating even after close, comment stopFloatingLoop() out. We'll stop them on close to avoid clutter.
+      stopFloatingLoop();
+    }
+
+    teddy.addEventListener('click', (e)=>{
+      showPopup();
+      // tiny tactile pulse on first tap
+      teddy.animate([{transform:'scale(1)'},{transform:'scale(0.98)'},{transform:'scale(1)'}], {duration:240, easing:'ease-out'});
+    });
+
+    // close popup by tapping anywhere on overlay
+    popup.addEventListener('click', ()=> hidePopup());
+
+    /*******************************
+     * Music control (start after user gesture for autoplay rules)
+     *******************************/
+    function tryStartMusic(){
+      if(musicStarted) return;
+      // Play only after user interacts
+      bgm.volume = 0.35;
+      const playPromise = bgm.play();
+      if(playPromise !== undefined){
+        playPromise.then(()=> {
+          musicStarted = true;
+          soundOn = true;
+          soundBtn.textContent = '🔊';
+          soundBtn.setAttribute('aria-pressed','true');
+        }).catch((err)=>{
+          // autoplay prevented — keep sound off until user toggles
+          musicStarted = false;
+          soundOn = false;
+          soundBtn.textContent = '🔇';
+          soundBtn.setAttribute('aria-pressed','false');
+        });
+      }
+    }
+
+    soundBtn.addEventListener('click', ()=>{
+      if(!musicStarted){
+        tryStartMusic();
+        return;
+      }
+      if(!soundOn){
+        bgm.play(); soundOn = true; soundBtn.textContent = '🔊'; soundBtn.setAttribute('aria-pressed','true');
+      } else {
+        bgm.pause(); soundOn = false; soundBtn.textContent = '🔇'; soundBtn.setAttribute('aria-pressed','false');
+      }
+    });
+
+    /*******************************
+     * Extra niceties: clicking outside on mobile may focus; prevent double-tap zoom
+     *******************************/
+    document.addEventListener('touchstart', function(){}, {passive:true});
+
+    /*******************************
+     * Optional: gentle trail sparkle behind floating particle
+     * We'll add small star particles occasionally for extra magic.
+     *******************************/
+    function spawnStar(xPx, yPx){
+      const star = document.createElement('div');
+      star.textContent = '✨';
+      star.style.position = 'absolute';
+      star.style.left = xPx + 'px';
+      star.style.top = yPx + 'px';
+      star.style.fontSize = (8 + Math.random()*12) + 'px';
+      star.style.opacity = '0.0';
+      star.style.transition = 'opacity 0.25s ease, transform 0.8s linear';
+      document.body.appendChild(star);
+      requestAnimationFrame(()=>{
+        star.style.opacity = '0.95';
+        star.style.transform = `translateY(-24px) scale(1.25)`;
+      });
+      setTimeout(()=> star.remove(), 900 + Math.random()*700);
+    }
+
+    // small chance to spawn stars while floating particles spawn
+    (function maybeSpawnStars(){
+      setInterval(()=>{
+        if(document.querySelector('.popup.active')){
+          if(Math.random() < 0.5){
+            // random near center
+            const x = window.innerWidth * (0.35 + Math.random()*0.3);
+            const y = window.innerHeight * (0.55 + Math.random()*0.15);
+            spawnStar(x,y);
+          }
+        }
+      }, 700);
+    })();
+
+    /*******************************
+     * Accessibility: keyboard triggers
+     *******************************/
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        // if popup open, close; else open
+        if(document.querySelector('.popup.active')) hidePopup();
+        else showPopup();
+      } else if(e.key === 'm'){ // mute toggle
+        soundBtn.click();
+      }
+    });
+
+    /*******************************
+     * start gentle wink schedule (already scheduled earlier)
+     *******************************/
+
+    // Ensure on page load eyes and blush default states are correct
+    blushes.style.opacity = '0';
+
+    // done
+  </script>
+</body>
+</html>
