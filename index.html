@@ -441,8 +441,7 @@
     function hidePopup(){
       popup.classList.remove('active');
       popup.setAttribute('aria-hidden','true');
-      // keep floating going (user requested endless until closed) -> they asked it should continue endlessly while popup shown;
-      // If you want to keep floating even after close, comment stopFloatingLoop() out. We'll stop them on close to avoid clutter.
+    
       stopFloatingLoop();
     }
 
@@ -544,9 +543,6 @@
       }
     });
 
-    /*******************************
-     * start gentle wink schedule (already scheduled earlier)
-     *******************************/
 
     // Ensure on page load eyes and blush default states are correct
     blushes.style.opacity = '0';
